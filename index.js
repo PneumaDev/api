@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import youtubeRouter from "./routes/youtube.route.js";
+// import youtubeRouter from "./routes/youtube.route.js";
 import userRouter from "./routes/user.route.js";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -22,7 +22,7 @@ app.use(cors());
 app.use(express.json());
 
 // _Define routes
-app.use("/api/yt", youtubeRouter);
+// app.use("/api/yt", youtubeRouter);
 app.use("/api/user", userRouter);
 
 app.get('/', (req, res) => {
