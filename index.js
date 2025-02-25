@@ -5,7 +5,7 @@ import userRouter from "./routes/user.route.js";
 import cors from "cors";
 import mongoose from "mongoose";
 import cron from "node-cron";
-import { saveVideos } from "./controllers/youtube.controller.js";
+// import { saveVideos } from "./controllers/youtube.controller.js";
 
 // _Initialize dotenv
 dotenv.config();
