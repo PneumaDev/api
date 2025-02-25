@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import youtubeRouter from "./routes/youtube.route.js";
 import userRouter from "./routes/user.route.js";
-import path from "path";
 import cors from "cors";
 import mongoose from "mongoose";
 import cron from "node-cron";
