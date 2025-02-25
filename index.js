@@ -11,7 +11,7 @@ import { saveVideos } from "./controllers/youtube.controller.js";
 // _Initialize dotenv
 dotenv.config();
 
-const __dirname = path.resolve();
+const port = process.env.PORT || 4000;
 
 // _Initialize an express app
 const app = express();
@@ -26,13 +26,13 @@ app.use(express.json());
 app.use("/api/yt", youtubeRouter);
 app.use("/api/user", userRouter);
 
-// _Serve frontend in production
-app.use(express.static(path.join(__dirname, "/client/dist")));
+app.get('/', (req, res) => {
+  res.send("API Working")
+})
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-});
-
+app.listen(port, () => {
+  console.log('Server up and running on PORT: ' + port);
+})
 // _Error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
