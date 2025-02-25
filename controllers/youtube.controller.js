@@ -1,10 +1,5 @@
 // _Handle Imports
-const axios = process.env.NODE_ENV === 'production'
-  ? await import('axios/dist/node/axios.cjs')
-  : await import('axios');
-
-export default axios.default; // axios is an ES module, so we use `.default`
-
+import axios from "axios";
 import { ytmp3 } from 'ruhend-scraper'
 
 import { Video } from "../models/videosList.js";
