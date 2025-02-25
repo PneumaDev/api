@@ -1,0 +1,41 @@
+{
+  "name": "stlc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client",
+    "vercel-build": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@distube/ytdl-core": "^4.16.4",
+    "@heroicons/react": "^2.2.0",
+    "@saverious/daraja": "^1.1.1",
+    "axios": "^1.7.9",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "mongoose": "^8.10.1",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.10.0",
+    "nodemon": "^3.1.9",
+    "ruhend-scraper": "^8.1.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-async-generator-functions": "^7.26.8",
+    "@babel/plugin-transform-class-properties": "^7.25.9",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.26.6",
+    "@babel/plugin-transform-numeric-separator": "^7.25.9",
+    "@babel/plugin-transform-object-rest-spread": "^7.25.9",
+    "@babel/plugin-transform-optional-catch-binding": "^7.25.9",
+    "@babel/plugin-transform-optional-chaining": "^7.25.9"
+  }
+}
