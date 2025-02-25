@@ -26,7 +26,7 @@ app.use(express.json());
 app.use("/api/user", userRouter);
 
 app.get('/', (req, res) => {
-  res.send("API Working")
+  res.send("STLC API Working")
 })
 
 app.listen(port, () => {
