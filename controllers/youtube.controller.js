@@ -1,74 +1,72 @@
 // _Handle Imports
-const axios = process.env.NODE_ENV === 'production'
-  ? await import('axios/dist/node/axios.cjs')
-  : await import('axios');
+// const axios = process.env.NODE_ENV === 'production'
+//   ? await import('axios/dist/node/axios.cjs')
+//   : await import('axios');
 
-export default axios.default;
+// export default axios.default;
+
+import axios from "axios";
 
 // import { ytmp3 } from 'ruhend-scraper'
 
 import { Video } from "../models/videosList.js";
 
 // _Handle Retrieving videos
-// export const saveVideos = async () => {
-//   try {
-//     const channelId = "UCqYGnYVOfB9bd3CUirZPjEQ"; // Replace with the ID of your YouTube channel
+export const saveVideos = async () => {
+  try {
+    const channelId = "UCqYGnYVOfB9bd3CUirZPjEQ";
+    const apiKey = process.env.YOUTUBE_API_KEY;
 
-//     // Make a request to the YouTube Data API to fetch videos from the channel
-//     const response = await axios.get(
-//       `https://www.googleapis.com/youtube/v3/search?key=AIzaSyCoYI7mWAs3XrQv0DCeB0eCETym-eGv0Js&channelId=${channelId}&part=snippet,id&order=date&maxResults=12`
-//     );
+    if (!apiKey) {
+      throw new Error("YouTube API key is missing! Set it in the .env file.");
+    }
 
-//     if (response.status !== 200) {
-//       throw new Error(response.statusText);
-//     }
+    // Fetch latest 12 videos from YouTube API
+    const response = await axios.get(
+      `https://www.googleapis.com/youtube/v3/search`,
+      {
+        params: {
+          key: apiKey,
+          channelId: channelId,
+          part: "snippet,id",
+          order: "date",
+          maxResults: 12,
+        },
+      }
+    );
 
-//     // Extract relevant data from the response, including download links
-//     const videos = await Promise.all(response.data.items.map(async (item) => {
-//       const videoId = item.id.videoId;
-//       const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    if (response.status !== 200) {
+      throw new Error(`YouTube API Error: ${response.statusText}`);
+    }
 
-//       // Fetch download link using ruhend-scraper
-//       let audioDownloadLink;
-//       let videoDownloadLink;
-//       let videoSize;
-//       let audioSize;
+    // Extract & filter valid videos
+    const videos = response.data.items
+      .filter((item) => item.id.videoId) // Ensure it's a video, not a playlist
+      .map((item) => ({
+        id: item.id.videoId,
+        title: item.snippet.title.replace("&amp;", "AND"),
+        description:
+          item.snippet.description ||
+          "For whatever was written in former days was written for our instruction...",
+        publishedAt: item.snippet.publishedAt,
+        videoUrl: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+      }));
 
-//       // try {
-//       //   try {
-//       //     const data = await ytmp3(videoUrl)
-//       //     audioDownloadLink = data.audio
-//       //   } catch (error) {
-//       //     console.log(error);
-//       //   }
-//       // } catch (error) {
-//       //   console.error('Error fetching download link:', error);
-//       //   audioDownloadLink = 'Download link not available';
-//       // }
+    if (videos.length === 0) {
+      console.log("No new videos found.");
+      return;
+    }
 
-//       return {
-//         id: videoId,
-//         title: (item.snippet.title).replace('&amp;', "AND"),
-//         description: item.snippet.description || `For whatever was written in former days was written for our instruction, that through endurance and through the encouragement of the Scriptures we might have hope.`,
-//         publishedAt: item.snippet.publishedAt,
-//         // downloadLink: audioDownloadLink,
-//       };
-//     }));
+    // Delete old videos & insert new ones efficiently
+    await Video.deleteMany({});
+    await Video.insertMany(videos);
 
-//     // Delete all existing videos from the database
-//     await Video.deleteMany({});
-
-//     // Save new videos to the database
-//     for (const video of videos) {
-//       await Video.updateOne({ id: video.id }, video, { upsert: true });
-//     }
-
-//     console.log(`Saved ${videos.length} videos to database.`);
-//   } catch (error) {
-//     console.error("Error fetching and saving videos:", error);
-//     throw error;
-//   }
-// };
+    console.log(`✅ Saved ${videos.length} videos to the database.`);
+  } catch (error) {
+    console.error("❌ Error fetching and saving videos:", error.message);
+    throw error;
+  }
+};
 
 export const getVideos = async (req, res) => {
   try {
