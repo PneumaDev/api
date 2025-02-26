@@ -16,7 +16,10 @@ const port = process.env.PORT || 4000;
 const app = express();
 
 // _Enable CORS middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://stlc.vercel.app', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+}));
 
 // _Needed when sending data to the server as JSON
 app.use(express.json());
