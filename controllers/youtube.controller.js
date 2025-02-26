@@ -21,19 +21,13 @@ export const saveVideos = async () => {
       throw new Error("YouTube API key is missing! Set it in the .env file.");
     }
 
+    console.log(apiKey);
+
     // Fetch latest 12 videos from YouTube API
     const response = await axios.get(
-      `https://www.googleapis.com/youtube/v3/search`,
-      {
-        params: {
-          key: apiKey,
-          channelId: channelId,
-          part: "snippet,id",
-          order: "date",
-          maxResults: 12,
-        },
-      }
+      `https://www.googleapis.com/youtube/v3/search?key=AIzaSyCoYI7mWAs3XrQv0DCeB0eCETym-eGv0Js&channelId=${channelId}&part=snippet,id&order=date&maxResults=12`
     );
+
 
     if (response.status !== 200) {
       throw new Error(`YouTube API Error: ${response.statusText}`);
@@ -49,7 +43,7 @@ export const saveVideos = async () => {
           item.snippet.description ||
           "For whatever was written in former days was written for our instruction...",
         publishedAt: item.snippet.publishedAt,
-        videoUrl: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+        thumbnails: item.snippet.thumbnails || {}, // ✅ Ensure thumbnails exist
       }));
 
     if (videos.length === 0) {
@@ -58,13 +52,25 @@ export const saveVideos = async () => {
     }
 
     // Delete old videos & insert new ones efficiently
-    await Video.deleteMany({});
-    await Video.insertMany(videos);
+    try {
+      await Video.deleteMany({});
+    } catch (error) {
+      console.log(error.message)
+      throw error;
+    }
+    try {
+      await Video.insertMany(videos);
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+
+    }
+
 
     console.log(`✅ Saved ${videos.length} videos to the database.`);
   } catch (error) {
     console.error("❌ Error fetching and saving videos:", error.message);
-    throw error;
+    throw error.message;
   }
 };
 
