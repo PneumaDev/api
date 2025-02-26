@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import {
-  downloadVideo,
+  // downloadVideo,
   // download,
   // getDownloadProgress,
   getVideos,
@@ -19,7 +19,7 @@ import {
 // router.get("/search", searchVideos);
 
 router.get("/videos", getVideos);
-router.get("/download", downloadVideo)
+// router.get("/download", downloadVideo)
 
 // router.get("/progress", getDownloadProgress);
 
