@@ -6,8 +6,7 @@ const videoSchema = new mongoose.Schema(
     description: { type: String, required: false, unique: false },
     title: { type: String, required: true },
     // downloadLink: { type: String, required: true },
-    audioSize: { type: Number, required: true },
-    thumbnail: { type: String, required: true },
+    thumbnails: { type: Object, required: true },
     publishedAt: { type: Date, required: true },
   },
   { timestamps: true }
